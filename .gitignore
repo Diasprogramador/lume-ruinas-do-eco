@@ -1,0 +1,10 @@
+.godot/
+build/
+dist/
+*.log
+__pycache__/
+.env
+.env.*
+export_credentials.cfg
+/*preview.png
+/*preview.png.import
