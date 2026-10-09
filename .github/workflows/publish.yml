@@ -39,6 +39,19 @@ jobs:
           cp -r THIRD_PARTY build/web/
           cp assets/fonts/OFL.txt build/web/THIRD_PARTY/Cormorant-OFL.txt
           touch build/web/.nojekyll
+          python3 tools/prepare_web.py
+      - name: Testar instalação e abertura offline
+        run: |
+          python3 -m pip install playwright==1.63.0
+          python3 -m playwright install --with-deps chromium
+          python3 -m http.server 8765 --directory build --bind 127.0.0.1 > /tmp/lume-web.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:8765/web/ > /dev/null; then break; fi
+            sleep 1
+          done
+          python3 tests/web_install.py http://127.0.0.1:8765/web/
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'
         with:

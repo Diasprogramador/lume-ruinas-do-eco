@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111922">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lume">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icons/lume-192.png">
+<link rel="stylesheet" href="install.css">
 <meta name="description" content="Lume: Ruínas do Eco. Explore cinco regiões, enfrente guardiões e preserve sua luz. Jogue grátis no PC ou celular.">
 <title>Lume · Ruínas do Eco</title>
 <style>
@@ -20,10 +26,22 @@ $GODOT_HEAD_INCLUDE
  <button id="play">Entrar nas ruínas</button>
  <progress id="progress" value="0" max="100" hidden aria-label="Carregamento"></progress>
  <p id="status" role="status">PC: teclado e mouse · Celular: controles de toque</p>
- <nav><a href="https://github.com/Diasprogramador/lume-ruinas-do-eco/releases/latest">Baixar para Windows</a><a href="https://github.com/Diasprogramador/lume-ruinas-do-eco">Sobre o projeto</a></nav>
+ <nav aria-label="Instalar o jogo"><button class="download-link" data-install="android">Instalar no Android</button><button class="download-link" data-install="ios">Instalar no iPhone / iPad</button><a href="https://github.com/Diasprogramador/lume-ruinas-do-eco/releases/latest">Baixar para Windows</a><a href="https://github.com/Diasprogramador/lume-ruinas-do-eco">Sobre o projeto</a></nav>
 </section>
+<dialog id="install-dialog" aria-labelledby="install-title">
+ <form method="dialog"><button class="close-install" aria-label="Fechar instruções">Fechar ×</button></form>
+ <span class="eyebrow">Sua luz, sempre por perto</span>
+ <h2 id="install-title">Lume no seu celular</h2>
+ <p>Instale pela página e abra pelo ícone na tela inicial.</p>
+ <ol>
+  <li><strong>Baixe o jogo para jogar offline.</strong><p>Cerca de 41 MB. Mantenha esta página aberta até terminar.</p><button id="download-offline">Baixar jogo offline</button><p id="offline-status" role="status" aria-live="polite">O primeiro download precisa de internet.</p></li>
+  <li><strong>Adicione à tela inicial.</strong><p id="install-help"></p><button id="install-native" hidden>Instalar aplicativo</button></li>
+ </ol>
+ <p class="install-note">Depois de adicionar, abra o ícone Lume e confira o download offline por lá também. O navegador pode liberar esse espaço se o aparelho ficar sem armazenamento. Jogue na horizontal.</p>
+</dialog>
 <section id="rotate"><span class="eyebrow">Âmbar &amp; noite</span><h2>Vire o celular</h2><p>Jogue na horizontal para ter espaço para os controles e enxergar os caminhos.</p><button id="rotate-full">Usar tela cheia</button></section>
 <button id="full" aria-label="Alternar tela cheia">Tela cheia</button>
+<script src="install.js"></script>
 <script src="$GODOT_URL"></script>
 <script>
 const touch=matchMedia('(pointer: coarse)').matches;

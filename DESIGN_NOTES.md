@@ -1,5 +1,9 @@
 # Lume: Ruínas do Eco
 
+## Instalação móvel — outubro de 2026
+
+Preservar a direção existente: fundo #111922, texto #e7eedf, acento verde #a9d8c5 no PC e âmbar #e8bd80 no toque. Georgia para títulos e instruções. Opções Android / iPhone ficam ao lado do download Windows; diálogo nativo acessível, com duas etapas: baixar offline e adicionar à tela inicial. Estados explícitos de progresso, sucesso, erro e atualização pendente. Ícone com máscara de Lume e relicário âmbar dentro da área segura para recortes do sistema.
+
 Protótipo original de exploração e combate lateral no Godot 4.
 Direção: ruínas subterrâneas com arcos antigos, pequenas luzes vivas e silhuetas em camadas.
 Paleta: abismo #071222, pedra #182b3e, névoa #456277, lume #8eeed2, marfim #e8efe5, perigo #ed887c.

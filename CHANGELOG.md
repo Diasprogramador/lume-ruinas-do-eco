@@ -1,5 +1,13 @@
 # Histórico de versões
 
+## Atualização web — 9 de outubro de 2026
+
+- Instalação pela página para Android e iPhone/iPad, com ícone próprio na tela inicial.
+- Download offline completo, confirmação de conclusão e tentativa novamente em caso de falha.
+- Instruções específicas para Safari e Chrome, com botão de instalação quando o navegador permite.
+- Atualizações offline são baixadas por versão e aplicadas após fechar as janelas anteriores do jogo.
+- A versão Windows 1.0.0 permanece disponível no lançamento original.
+
 ## 1.0.0 — 8 de outubro de 2026
 
 Primeira versão pública jogável de **Lume: Ruínas do Eco**.

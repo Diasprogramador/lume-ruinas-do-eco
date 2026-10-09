@@ -26,10 +26,21 @@ Um projeto independente inspirado na atmosfera dos metroidvanias, com personagen
 | Plataforma | Como começar |
 |---|---|
 | **PC, pelo navegador** | Abra **Jogar agora**, clique em **Entrar nas ruínas** e depois em **Jogar**. |
-| **Celular** | Abra o mesmo link e vire o aparelho na horizontal. Os controles de toque aparecem automaticamente. |
+| **Android** | Abra **Jogar agora** no Chrome → **Instalar no Android**. Baixe o jogo offline e adicione à tela inicial. |
+| **iPhone / iPad** | Abra **Jogar agora** no Safari → **Instalar no iPhone / iPad**. Use **Compartilhar → Adicionar à Tela de Início** (ative **Abrir como App**, se aparecer). |
 | **Windows 10/11, 64 bits** | Baixe `Lume-v1.0.0-Windows-x64.zip`, extraia a pasta e abra `Lume.exe`. Não precisa instalar Godot. |
 
-O navegador precisa de **WebGL 2** e **WebAssembly**. A primeira abertura baixa o motor e o conteúdo do jogo; a velocidade depende da conexão e do aparelho. No celular, esta versão funciona pelo navegador, sem APK ou instalação por loja.
+O navegador precisa de **WebGL 2** e **WebAssembly**. A primeira abertura baixa o motor e o conteúdo do jogo; a velocidade depende da conexão e do aparelho. A edição móvel é um aplicativo web instalável, sem APK ou publicação em lojas.
+
+### Instalar e jogar sem internet
+
+1. Na página inicial, escolha **Instalar no Android** ou **Instalar no iPhone / iPad**.
+2. Toque em **Baixar jogo offline** e aguarde a confirmação. O download completo ocupa cerca de **41 MB**, incluindo o motor.
+3. Adicione à tela inicial pelo botão de instalação, quando disponível, ou siga as instruções do navegador mostradas na página.
+4. Abra pelo ícone **Lume**. No iOS, o aplicativo pode ter armazenamento separado do Safari: confira o download offline também dentro do aplicativo instalado.
+5. Jogue na horizontal. Use **Verificar atualizações** com internet para baixar uma nova versão. Se houver atualização pendente, feche todas as janelas do Lume e abra novamente.
+
+Se você abriu o link dentro do WhatsApp ou Instagram, abra no Safari/Chrome para instalar. O navegador pode remover o download para liberar armazenamento; nesse caso, baixe novamente. A campanha ainda dura a sessão, mesmo no aplicativo instalado. A instalação/offline foi validada em navegador automatizado; a instalação pela tela inicial em iPhone/iPad físico ainda precisa de validação.
 
 ## Âmbar & noite · edição de toque
 
@@ -114,6 +125,7 @@ Para exportar, instale os templates oficiais de **4.6.1**, crie `build/web` e `b
 
 ```sh
 godot --headless --path . --export-release Web build/web/index.html
+python tools/prepare_web.py
 godot --headless --path . --export-release Windows build/windows/Lume.exe
 ```
 
