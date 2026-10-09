@@ -5,6 +5,7 @@ var body: Font
 var display: Font
 var menu: Control
 var help_open: bool = false
+const Icons = preload("res://scripts/combat_icons.gd")
 var previous_health: int = 5
 var damage_flash: float = 0
 var display_energy: float = 60
@@ -50,6 +51,10 @@ func toggle_help() -> void:
 
 func _process(delta: float) -> void:
 	scale = get_viewport_rect().size / Vector2(1280,720)
+	if world.touch_controls and world.touch_controls.editing:
+		menu.hide()
+		queue_redraw()
+		return
 	if Input.is_action_just_pressed("help"):
 		if menu.page == "main" and Engine.get_process_frames() > menu.block_shortcuts_until:
 			toggle_help()
@@ -82,6 +87,8 @@ func diamond(center: Vector2, radius: float, tint: Color) -> void:
 
 func _draw() -> void:
 	if not world or not world.player:
+		return
+	if world.touch_controls and world.touch_controls.editing:
 		return
 	if menu.visible and not help_open:
 		draw_rect(Rect2(0,0,1280,720),Color(0.015,0.02,0.035,0.72 if menu.page == "main" else 0.9))
@@ -126,19 +133,7 @@ func _draw() -> void:
 			var available: bool = player.energy >= 30 if i in [2,3] else (player.dash_cooldown <= 0 if i == 4 else true)
 			var tint := Color("e2e8de") if available else Color("6a777c")
 			draw_circle(center,16,Color(0.02,0.03,0.05,0.65))
-			if i < 2:
-				draw_line(center+Vector2(-6,7),center+Vector2(7,-8),tint,2,true)
-				draw_line(center+Vector2(-7,1),center+Vector2(0,7),tint,2,true)
-				if i == 1:
-					draw_arc(center,12,-1.6,0.7,20,tint,1,true)
-			elif i == 2:
-				diamond(center,7,tint)
-			elif i == 3:
-				draw_arc(center,8,0,TAU,24,tint,1.5,true)
-				draw_line(center-Vector2(0,5),center+Vector2(0,5),tint,2,true)
-			else:
-				for j in range(3):
-					draw_line(center+Vector2(-9,j*4-4),center+Vector2(7-j*3,j*4-4),tint,2,true)
+			Icons.paint(self,actions[i],center,23,tint)
 			var key: String = Settings.key_label(actions[i])
 			text(key,center+Vector2(-body.get_string_size(key,HORIZONTAL_ALIGNMENT_LEFT,-1,11).x/2,32),11,tint)
 			var fill: float = player.charge/0.65 if i == 1 else (player.focus/0.9 if i == 3 else (1-player.dash_cooldown/0.48 if i == 4 else 0))

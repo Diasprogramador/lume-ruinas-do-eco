@@ -27,7 +27,7 @@ jobs:
           set -o pipefail
           GODOT=Godot_v4.6.1-stable_linux.x86_64
           $GODOT --headless --path . --editor --import --quit
-          for suite in gameplay preferences levels mobile; do
+          for suite in gameplay preferences levels mobile hud_customization; do
             $GODOT --headless --path . --script res://tests/$suite.gd 2>&1 | tee /tmp/test-$suite.log
             if grep -E 'SCRIPT ERROR|^FAIL:|FAIL: ' /tmp/test-$suite.log; then exit 1; fi
           done

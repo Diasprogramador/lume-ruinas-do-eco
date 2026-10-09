@@ -23,6 +23,7 @@ var started: bool = false
 var won: bool = false
 var time: float = 0
 var hud_ui: Control
+var touch_controls: Control
 var message: Label
 var title: Label
 var overlay: ColorRect
@@ -171,11 +172,14 @@ func setup_hud() -> void:
 	touch_layer.layer = 20
 	add_child(touch_layer)
 	var touch := preload("res://scripts/touch_controls.gd").new()
+	touch_controls = touch
 	touch.name = "TouchControls"
 	touch.world = self
 	touch_layer.add_child(touch)
 
 func _process(delta: float) -> void:
+	if touch_controls and touch_controls.editing:
+		return
 	var can_shortcut: bool = Engine.get_process_frames() > hud_ui.menu.block_shortcuts_until
 	var escape_pressed := Input.is_key_pressed(KEY_ESCAPE)
 	var escape_just_pressed := escape_pressed and not escape_held

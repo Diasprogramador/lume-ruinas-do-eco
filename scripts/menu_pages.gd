@@ -10,6 +10,8 @@ var main_controls: Control
 var settings_controls: Control
 var key_controls: Control
 var audio_controls: Control
+var touch_settings: Control
+const Icons = preload("res://scripts/combat_icons.gd")
 var shop_controls: Control
 var back_button: Button
 var play_button: Button
@@ -32,22 +34,31 @@ func _ready() -> void:
 	settings_controls = group()
 	key_controls = group(settings_controls)
 	audio_controls = group(settings_controls)
+	touch_settings = group(settings_controls)
+	settings_tab = "touch" if Settings.mobile_mode else "keys"
 	shop_controls = group()
 	play_button = button(main_controls,"Jogar",Vector2(766,220),Vector2(365,55),world.hud_ui.activate)
-	button(main_controls,"Configurações",Vector2(766,285),Vector2(365,51),func(): open_page("settings"))
+	button(main_controls,"Configurações / HUD" if Settings.mobile_mode else "Configurações e teclas",Vector2(766,285),Vector2(365,51),func(): open_page("settings"))
 	button(main_controls,"Loja de capas",Vector2(766,346),Vector2(365,51),func(): open_page("shop"))
 	button(main_controls,"Controles e habilidades",Vector2(766,407),Vector2(365,51),world.hud_ui.toggle_help)
 	home_button = button(main_controls,"Menu inicial",Vector2(766,468),Vector2(365,47),return_home)
 	quit_button = button(main_controls,"Sair do jogo",Vector2(766,525),Vector2(365,47),func(): get_tree().quit())
-	button(settings_controls,"Teclas",Vector2(130,134),Vector2(225,40),func(): select_tab("keys"))
+	button(settings_controls,"Teclas e ataques",Vector2(130,134),Vector2(225,40),func(): select_tab("keys"))
 	button(settings_controls,"Áudio e vídeo",Vector2(365,134),Vector2(225,40),func(): select_tab("audio"))
+	var touch_tab := button(settings_controls,"HUD do celular",Vector2(600,134),Vector2(225,40),func(): select_tab("touch"))
+	touch_tab.visible = Settings.mobile_mode
+	label(touch_settings,"Seus controles, do seu jeito",Vector2(150,230),30)
+	label(touch_settings,"Arraste os botões e o direcional. Ajuste o tamanho de cada controle.",Vector2(150,297),22)
+	label(touch_settings,"Escolha a transparência e mantenha ou esconda os nomes.",Vector2(150,337),22)
+	label(touch_settings,"O jogo fica pausado enquanto você edita. Salve ou cancele ao terminar.",Vector2(150,377),20)
+	button(touch_settings,"Personalizar HUD",Vector2(150,447),Vector2(450,65),func(): world.touch_controls.begin_edit())
 	var index := 0
 	for action in Settings.ACTION_NAMES:
 		var column := index%2
 		var row := index/2
 		var x := 130.0+column*520
 		var y := 204.0+row*48
-		label(key_controls,Settings.ACTION_NAMES[action],Vector2(x,y+9),16)
+		label(key_controls,Settings.ACTION_NAMES[action],Vector2(x+(26 if action in ["attack","charge","spell","focus","dash","jump","interact","pause"] else 0),y+9),16)
 		key_buttons[action] = button(key_controls,"",Vector2(x+190,y),Vector2(240,38),func(): capture(action))
 		index += 1
 	button(key_controls,"Restaurar teclas padrão",Vector2(130,573),Vector2(280,40),func(): Settings.reset_keys(); status = "Teclas padrão restauradas."; refresh())
@@ -174,6 +185,7 @@ func select_tab(tab: String) -> void:
 	settings_tab = tab
 	key_controls.visible = tab == "keys"
 	audio_controls.visible = tab == "audio"
+	touch_settings.visible = tab == "touch"
 	queue_redraw()
 
 func close_page() -> void:
@@ -274,10 +286,15 @@ func _draw() -> void:
 	elif page == "settings":
 		panel(Rect2(90,40,1100,635))
 		text("Configurações",Vector2(130,91),38,Color("e8efe5"),true)
-		text("Clique numa tecla para trocar. Esc cancela. Teclas duplicadas são bloqueadas." if settings_tab == "keys" else "Ajuste os volumes, teste os sons e escolha como prefere jogar.",Vector2(130,118),15)
-		var tab_x := 130 if settings_tab == "keys" else 365
+		text("Clique na tecla ao lado do ataque para trocar. Esc cancela; teclas duplicadas são bloqueadas." if settings_tab == "keys" else ("Personalize seus controles de toque." if settings_tab == "touch" else "Ajuste os volumes, teste os sons e escolha como prefere jogar."),Vector2(130,118),15)
+		var tab_x: int = {"keys":130,"audio":365,"touch":600}[settings_tab]
 		draw_line(Vector2(tab_x,180),Vector2(tab_x+225,180),Color("8eeed2"),2)
-		text(status if status != "" else "Preferências salvas automaticamente neste computador.",Vector2(130,554),14,Color("ffe2a2") if status != "" else Color("90b6aa"))
+		text(status if status != "" else "Preferências guardadas neste dispositivo. No editor de HUD, toque em Salvar.",Vector2(130,554),14,Color("ffe2a2") if status != "" else Color("90b6aa"))
+		if settings_tab == "keys":
+			var index := 0
+			for action in Settings.ACTION_NAMES:
+				Icons.paint(self,action,Vector2(140+(index%2)*520,225+(index/2)*48),19,Color("e8bd80"))
+				index += 1
 	elif page == "shop":
 		panel(Rect2(70,60,1140,620))
 		text("O ateliê dos ecos",Vector2(108,117),38,Color("e8efe5"),true)

@@ -2,6 +2,17 @@ extends Node
 
 signal changed
 
+const TOUCH_DEFAULTS := {
+	"attack": [Vector2(1110,554),55.0,"Golpe"], "jump": [Vector2(1202,641),51.0,"Pulo"],
+	"dash": [Vector2(1005,641),46.0,"Dash"], "spell": [Vector2(1202,453),45.0,"Magia"],
+	"charge": [Vector2(1100,430),43.0,"Carregar"], "focus": [Vector2(1000,525),42.0,"Curar"],
+	"interact": [Vector2(860,643),43.0,"Usar"], "pause": [Vector2(1210,48),39.0,"Pausa"],
+	"stick": [Vector2(160,620),88.0,"Direcional"]
+}
+var hud_layout: Dictionary = {}
+var hud_opacity: float = 0.85
+var hud_labels: bool = true
+
 const DEFAULT_KEYS := {
 	"left":[KEY_A,KEY_LEFT],"right":[KEY_D,KEY_RIGHT],"up":[KEY_W,KEY_UP],"down":[KEY_S,KEY_DOWN],
 	"jump":[KEY_SPACE,KEY_Z],"attack":[KEY_J,KEY_X],"charge":[KEY_K],"spell":[KEY_Q],"focus":[KEY_F],
@@ -53,6 +64,7 @@ func _ready() -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 
 func load_profile() -> void:
+	hud_layout = default_touch_layout()
 	var config := ConfigFile.new()
 	if config.load(save_path) != OK:
 		return
@@ -65,6 +77,10 @@ func load_profile() -> void:
 	effects_volume = clampf(float(config.get_value("audio","effects",0.8)),0,1)
 	fullscreen = bool(config.get_value("display","fullscreen",false))
 	camera_shake = bool(config.get_value("display","shake",true))
+	hud_layout = sanitize_touch_layout(config.get_value("touch","layout",{}))
+	var opacity = config.get_value("touch","opacity",0.85)
+	hud_opacity = clampf(float(opacity),0.45,1.0) if (opacity is float or opacity is int) and is_finite(float(opacity)) else 0.85
+	hud_labels = bool(config.get_value("touch","labels",true))
 	wallet = maxi(0,int(config.get_value("shop","wallet",0)))
 	var saved_seeds = config.get_value("shop","seeds",[])
 	claimed_seeds = saved_seeds if saved_seeds is Array else []
@@ -88,6 +104,9 @@ func save_profile() -> Error:
 	config.set_value("audio","effects",effects_volume)
 	config.set_value("display","fullscreen",fullscreen)
 	config.set_value("display","shake",camera_shake)
+	config.set_value("touch","layout",hud_layout)
+	config.set_value("touch","opacity",hud_opacity)
+	config.set_value("touch","labels",hud_labels)
 	config.set_value("shop","wallet",wallet)
 	config.set_value("shop","seeds",claimed_seeds)
 	config.set_value("shop","owned",owned)
@@ -138,7 +157,7 @@ func key_label(action: String, all_keys: bool = false) -> String:
 	var labels := PackedStringArray()
 	for key in keys:
 		var name := OS.get_keycode_string(int(key))
-		name = {"Space":"Espaço","Left":"←","Right":"→","Up":"↑","Down":"↓","Escape":"Esc"}.get(name,name)
+		name = {"Space":"Espaço","Left":"Esquerda","Right":"Direita","Up":"Cima","Down":"Baixo","Escape":"Esc"}.get(name,name)
 		labels.append(name)
 		if not all_keys:
 			break
@@ -201,6 +220,9 @@ func purchase(item: String) -> String:
 
 func reset_test_profile() -> void:
 	test_mode = true
+	hud_layout = default_touch_layout()
+	hud_opacity = 0.85
+	hud_labels = true
 	bindings.clear()
 	wallet = 0
 	claimed_seeds.clear()
@@ -217,6 +239,42 @@ func _web_pause(_args: Array) -> void:
 	var world = get_tree().current_scene
 	if world and world.get("started") and not world.get("won"):
 		get_tree().paused = true
+
+func default_touch_layout() -> Dictionary:
+	var result := {}
+	for action in TOUCH_DEFAULTS:
+		result[action] = {"position": TOUCH_DEFAULTS[action][0], "scale": 1.0}
+	return result
+
+func sanitize_touch_layout(value) -> Dictionary:
+	var result := default_touch_layout()
+	if not value is Dictionary: return result
+	for action in result:
+		var spec = value.get(action,{})
+		if not spec is Dictionary: continue
+		var factor = spec.get("scale",1.0)
+		if (factor is float or factor is int) and is_finite(float(factor)):
+			result[action].scale = clampf(float(factor),0.85,1.5)
+		var point = spec.get("position",result[action].position)
+		if point is Vector2 and point.is_finite():
+			var radius: float = TOUCH_DEFAULTS[action][1]*result[action].scale+6
+			result[action].position = point.clamp(Vector2(radius,radius),Vector2(1280-radius,720-radius))
+	return result
+
+func save_touch_layout(layout: Dictionary, opacity: float, labels: bool) -> Error:
+	var previous := hud_layout
+	var previous_opacity := hud_opacity
+	var previous_labels := hud_labels
+	hud_layout = sanitize_touch_layout(layout)
+	hud_opacity = clampf(opacity,0.45,1.0)
+	hud_labels = labels
+	var error := save_profile()
+	if error != OK:
+		hud_layout = previous
+		hud_opacity = previous_opacity
+		hud_labels = previous_labels
+	changed.emit()
+	return error
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and not test_mode:

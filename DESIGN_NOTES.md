@@ -1,5 +1,9 @@
 # Lume: Ruínas do Eco
 
+## Controles personalizados — versão 1.1
+
+Símbolos vetoriais comuns: lâmina, corte solar, estrela arcana, cura, dash, salto, interação e pausa. Paleta âmbar existente nos controles de toque e nos ícones da aba de remapeamento; marfim no HUD de PC. Editor sobre o cenário pausado, grade discreta e contorno claro na seleção. Arrasto move apenas controles; tamanho individual 85–150%, opacidade 45–100%, nomes opcionais. Prévia separada do perfil salvo permite cancelar sem perder o layout anterior.
+
 ## Instalação móvel — outubro de 2026
 
 Preservar a direção existente: fundo #111922, texto #e7eedf, acento verde #a9d8c5 no PC e âmbar #e8bd80 no toque. Georgia para títulos e instruções. Opções Android / iPhone ficam ao lado do download Windows; diálogo nativo acessível, com duas etapas: baixar offline e adicionar à tela inicial. Estados explícitos de progresso, sucesso, erro e atualização pendente. Ícone com máscara de Lume e relicário âmbar dentro da área segura para recortes do sistema.

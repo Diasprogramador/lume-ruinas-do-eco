@@ -28,7 +28,7 @@ Um projeto independente inspirado na atmosfera dos metroidvanias, com personagen
 | **PC, pelo navegador** | Abra **Jogar agora**, clique em **Entrar nas ruínas** e depois em **Jogar**. |
 | **Android** | Abra **Jogar agora** no Chrome → **Instalar no Android**. Baixe o jogo offline e adicione à tela inicial. |
 | **iPhone / iPad** | Abra **Jogar agora** no Safari → **Instalar no iPhone / iPad**. Use **Compartilhar → Adicionar à Tela de Início** (ative **Abrir como App**, se aparecer). |
-| **Windows 10/11, 64 bits** | Baixe `Lume-v1.0.0-Windows-x64.zip`, extraia a pasta e abra `Lume.exe`. Não precisa instalar Godot. |
+| **Windows 10/11, 64 bits** | Baixe `Lume-v1.1.0-Windows-x64.zip`, extraia a pasta e abra `Lume.exe`. Não precisa instalar Godot. |
 
 O navegador precisa de **WebGL 2** e **WebAssembly**. A primeira abertura baixa o motor e o conteúdo do jogo; a velocidade depende da conexão e do aparelho. A edição móvel é um aplicativo web instalável, sem APK ou publicação em lojas.
 
@@ -54,6 +54,14 @@ Uma interface própria para celular: tons de âmbar, botões circulares, direcio
 - **Pausa:** abre o menu e libera os dedos para evitar comandos presos.
 
 É possível mover, pular e atacar usando vários dedos ao mesmo tempo.
+
+### Seus controles, do seu jeito
+
+**No celular:** entre em **Configurações / HUD → HUD do celular → Personalizar HUD**, no menu inicial ou na pausa. Arraste os botões e o direcional; toque em um controle para ajustar seu tamanho entre 85% e 150%. A transparência é ajustável e os nomes podem ser ocultados, mantendo os ícones. Toque em **Salvar** para guardar o layout neste dispositivo ou **Cancelar** para descartar. **Restaurar padrão** mostra o layout original antes de salvar. O jogo permanece pausado durante a edição.
+
+**No PC:** abra **Configurações e teclas → Teclas e ataques**, clique na tecla ao lado de Atacar, Corte carregado, Magia ou outra ação, e pressione a nova tecla. Conflitos são bloqueados; Esc cancela e **Restaurar teclas padrão** desfaz o remapeamento. Os ícones de combate são compartilhados entre PC e celular.
+
+![Editor do HUD móvel](docs/hud-editor.png)
 
 ![Interface móvel Âmbar e noite](docs/mobile-game.png)
 
@@ -117,9 +125,10 @@ godot --headless --path . --script res://tests/gameplay.gd
 godot --headless --path . --script res://tests/preferences.gd
 godot --headless --path . --script res://tests/levels.gd
 godot --headless --path . --script res://tests/mobile.gd
+godot --headless --path . --script res://tests/hud_customization.gd
 ```
 
-As quatro suítes verificam combate, configurações, loja, progressão e multitoque sem sobrescrever o perfil real do jogador.
+As cinco suítes verificam combate, configurações, loja, progressão, multitoque e personalização do HUD sem sobrescrever o perfil real do jogador. A publicação também testa instalação, recuperação de download e abertura offline no navegador.
 
 Para exportar, instale os templates oficiais de **4.6.1**, crie `build/web` e `build/windows`, e use os presets **Web** e **Windows**. `python tools/install_templates.py` baixa somente os arquivos necessários dos templates oficiais. O workflow do GitHub testa e publica a versão web a cada atualização de `main`.
 

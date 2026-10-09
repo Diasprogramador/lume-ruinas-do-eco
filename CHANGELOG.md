@@ -1,5 +1,15 @@
 # Histórico de versões
 
+## 1.1.0 — 9 de outubro de 2026
+
+- Ícones vetoriais de combate compartilhados entre os controles de toque, HUD do PC e configurações.
+- Aba **Teclas e ataques** com remapeamento visível, validação de conflitos e restauração dos padrões.
+- Editor móvel em **Configurações / HUD**: arraste botões e direcional, ajuste tamanhos individuais, transparência e exibição dos nomes.
+- Layout guardado no dispositivo, com Salvar, Cancelar e prévia de restauração. O jogo pausa durante a edição.
+- Controles permanecem dentro da tela; regiões de toque seguem posições e tamanhos personalizados.
+- Dezessete novas verificações de edição, persistência e combate com controles personalizados.
+- Download Windows atualizado; a edição web instalada pode baixar a atualização pela página inicial.
+
 ## Atualização web — 9 de outubro de 2026
 
 - Instalação pela página para Android e iPhone/iPad, com ícone próprio na tela inicial.
